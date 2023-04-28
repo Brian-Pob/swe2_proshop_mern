@@ -20,8 +20,6 @@ const HomeScreen = ({ match }) => {
 
   const productList = useSelector((state) => state.productList);
   const { loading, error, products, page, pages } = productList;
-  const { user } = useAuth0();
-  const userdata = user;
 
   useEffect(() => {
     dispatch(listProducts(keyword, pageNumber));

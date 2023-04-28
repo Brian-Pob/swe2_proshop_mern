@@ -6,10 +6,7 @@ import Header from './components/Header';
 import CartScreen from './screens/CartScreen';
 import ContactScreen from './screens/ContactScreen';
 import HomeScreen from './screens/HomeScreen';
-import {
-  default as LaterScreen,
-  default as LaterScreen,
-} from './screens/LaterScreen';
+import LaterScreen from './screens/LaterScreen';
 import LoginRedirect from './screens/LoginRedirect';
 import LoginScreen from './screens/LoginScreen';
 import OrderListScreen from './screens/OrderListScreen';
