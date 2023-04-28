@@ -1,5 +1,5 @@
-import axios from 'axios'
-import { ORDER_LIST_MY_RESET } from '../constants/orderConstants'
+import axios from 'axios';
+import { ORDER_LIST_MY_RESET } from '../constants/orderConstants';
 import {
   USER_DELETE_FAIL,
   USER_DELETE_REQUEST,
@@ -25,7 +25,7 @@ import {
   USER_UPDATE_PROFILE_SUCCESS,
   USER_UPDATE_REQUEST,
   USER_UPDATE_SUCCESS,
-} from '../constants/userConstants'
+} from '../constants/userConstants';
 
 // with Auth0
 // Auth0 Login -> Login Successful -> redirect to /callback
@@ -37,13 +37,14 @@ import {
 //   isAdmin: user.isAdmin,
 //   token: generateToken(user._id),
 // })
-// inside the callback, dispatch the following login action with different
-// parameters.
+// inside the callback, dispatch the following login action with userInfo
 export const loginWithAuth0 = (userInfo) => async (dispatch) => {
   try {
     dispatch({
       type: USER_LOGIN_REQUEST,
-    })
+    });
+
+    // Create data object to be dispatched as payload
     const data = {
       _id: userInfo.sub,
       name: userInfo.name,
@@ -66,6 +67,7 @@ export const loginWithAuth0 = (userInfo) => async (dispatch) => {
         },
       }
       // console.log('loginWithAuth0', userInfo);
+      };
       const axiosData = await axios.post(
         '/api/users/login',
         {
@@ -73,18 +75,15 @@ export const loginWithAuth0 = (userInfo) => async (dispatch) => {
           password: userInfo.sub,
         },
         config
-      )
-
-      const newAxiosData = {
-        ...axiosData.data,
-        isAdmin: userInfo['https://example.com/roles']?.includes('admin'),
-      }
+      );
 
       if (axiosData.data) {
         dispatch({
           type: USER_REGISTER_SUCCESS,
           payload: { ...axiosData.data, isAdmin: data.isAdmin },
-        })
+          // By deafult, isAdmin is false. If the user is an admin, we need to
+          // set it to true.
+        });
 
         dispatch({
           type: USER_LOGIN_SUCCESS,
@@ -97,9 +96,8 @@ export const loginWithAuth0 = (userInfo) => async (dispatch) => {
         )
       }
     } catch (error) {
-      console.error(error)
-      // console.log('data', data);
-      dispatch(registerWithAuth0(data))
+      // Catch should trigger if the user is not in the database.
+      dispatch(registerWithAuth0(data));
     }
 
     // At this point, we have the user info from Auth0 and we have
@@ -114,87 +112,25 @@ export const loginWithAuth0 = (userInfo) => async (dispatch) => {
           : error.message,
     })
   }
-}
-
-export const login = (email, password) => async (dispatch) => {
-  try {
-    dispatch({
-      type: USER_LOGIN_REQUEST,
-    })
-
-    const config = {
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    }
-
-    const { data } = await axios.post(
-      '/api/users/login',
-      { email, password },
-      config
-    )
-    // backend/controllers/userController.js:
-    // authUser()
-
-    // With Auth0, we can ignore the previous 3 code blocks. We just need to do
-    // dispatch USER_LOGIN_SUCCESS. We will need to get data from
-    // Auth0 and pass it to the payload. So it will look something like this:
-    // dispatch({
-    //   type: USER_LOGIN_SUCCESS,
-    //   payload: userInfo,
-    // });
-
-    dispatch({
-      type: USER_LOGIN_SUCCESS,
-      payload: data,
-    })
-
-    localStorage.setItem('userInfo', JSON.stringify(data))
-
-    // At this point, we have the user info from Auth0 and we have
-    // stored it in localStorage. Back in /callback, we can now
-    // redirect to the home page.
-    // This file should not handle the callback redirect. It only
-    // handles the login action, which is called in /callback.
-  } catch (error) {
-    dispatch({
-      type: USER_LOGIN_FAIL,
-      payload:
-        error.response && error.response.data.message
-          ? error.response.data.message
-          : error.message,
-    })
-  }
-}
+};
 
 export const logout = () => (dispatch) => {
-  localStorage.removeItem('userInfo')
-  localStorage.removeItem('cartItems')
-  localStorage.removeItem('laterItems')
-  localStorage.removeItem('shippingAddress')
-  localStorage.removeItem('paymentMethod')
-  dispatch({ type: USER_LOGOUT })
-  dispatch({ type: USER_DETAILS_RESET })
-  dispatch({ type: ORDER_LIST_MY_RESET })
-  dispatch({ type: USER_LIST_RESET })
-  // document.location.href = '/';
-}
-
-const sleepsecs = async (n) => {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve()
-    }, n * 1000)
-  })
-}
+  localStorage.removeItem('userInfo');
+  localStorage.removeItem('cartItems');
+  localStorage.removeItem('laterItems');
+  localStorage.removeItem('shippingAddress');
+  localStorage.removeItem('paymentMethod');
+  dispatch({ type: USER_LOGOUT });
+  dispatch({ type: USER_DETAILS_RESET });
+  dispatch({ type: ORDER_LIST_MY_RESET });
+  dispatch({ type: USER_LIST_RESET });
+};
 
 export const registerWithAuth0 = (userInfo) => async (dispatch) => {
   try {
     dispatch({
       type: USER_REGISTER_REQUEST,
-    })
-
-    // await sleepsecs(120);
+    });
 
     const config = {
       headers: {
@@ -202,7 +138,6 @@ export const registerWithAuth0 = (userInfo) => async (dispatch) => {
       },
     }
 
-    // console.log('registerwithAuth0 userInfo', userInfo);
     const { data } = await axios.post(
       '/api/users',
       {
@@ -226,7 +161,6 @@ export const registerWithAuth0 = (userInfo) => async (dispatch) => {
 
     localStorage.setItem('userInfo', JSON.stringify(data))
   } catch (error) {
-    // console.log(error);
     dispatch({
       type: USER_REGISTER_FAIL,
       payload:
