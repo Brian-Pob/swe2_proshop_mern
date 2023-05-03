@@ -1,6 +1,6 @@
 import { useAuth0 } from '@auth0/auth0-react';
 import React from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { Redirect } from 'react-router-dom';
 import { loginWithAuth0 } from '../actions/userActions';
 

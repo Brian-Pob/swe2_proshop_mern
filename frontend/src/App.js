@@ -57,7 +57,6 @@ const App = () => {
             component={HomeScreen}
             exact
           />
-          {/* Add the Contact Us Route to the application*/}
           <Route path="/contact-us" component={ContactScreen} exact />
           <Route path="/" component={HomeScreen} exact />
           <Route path="/callback" component={LoginRedirect} />

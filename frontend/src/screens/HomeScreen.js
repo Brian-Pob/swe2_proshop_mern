@@ -1,42 +1,41 @@
-import { useAuth0 } from '@auth0/auth0-react'
-import { Button, Col, Row } from 'react-bootstrap'
-import { useDispatch, useSelector } from 'react-redux'
-import { Link } from 'react-router-dom'
-import { listProducts } from '../actions/productActions'
-import Loader from '../components/Loader'
-import Message from '../components/Message'
-import Meta from '../components/Meta'
-import Paginate from '../components/Paginate'
-import Product from '../components/Product'
-import ProductCarousel from '../components/ProductCarousel'
+import { useAuth0 } from '@auth0/auth0-react';
+import { Button, Col, Row } from 'react-bootstrap';
+import { useDispatch, useSelector } from 'react-redux';
+import { Link } from 'react-router-dom';
+import { listProducts } from '../actions/productActions';
+import Loader from '../components/Loader';
+import Message from '../components/Message';
+import Meta from '../components/Meta';
+import Paginate from '../components/Paginate';
+import Product from '../components/Product';
+import ProductCarousel from '../components/ProductCarousel';
 
-import React from 'react'
-import { useState, useEffect } from 'react'
+import React, { useEffect, useState } from 'react';
 
 const HomeScreen = ({ match }) => {
-  const [selectedCategory, setSelectedCategory] = useState('') //stores the currently selected category in the drop down list
-  const [lowerPrice, setLowerPrice] = useState('')
-  const [upperPrice, setUpperPrice] = useState('')
+  const [selectedCategory, setSelectedCategory] = useState(''); //stores the currently selected category in the drop down list
+  const [lowerPrice, setLowerPrice] = useState('');
+  const [upperPrice, setUpperPrice] = useState('');
 
-  const keyword = match.params.keyword
-  const pageNumber = match.params.pageNumber || 1
+  const keyword = match.params.keyword;
+  const pageNumber = match.params.pageNumber || 1;
 
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
 
-  const productList = useSelector((state) => state.productList) //uses the useSelector to hook to access the products array from the Redux store (brad's umedy course, vid 29)
-  const { loading, error, products, page, pages } = productList
-  const { user } = useAuth0()
-  const userdata = user
+  const productList = useSelector((state) => state.productList); //uses the useSelector to hook to access the products array from the Redux store (brad's umedy course, vid 29)
+  const { loading, error, products, page, pages } = productList;
+  const { user } = useAuth0();
+  const userdata = user;
 
   useEffect(() => {
-    dispatch(listProducts(keyword, pageNumber))
-  }, [dispatch, keyword, pageNumber])
+    dispatch(listProducts(keyword, pageNumber));
+  }, [dispatch, keyword, pageNumber]);
 
   const handleChange = (event) => {
-    setSelectedCategory(event.target.value) //helps for drop down selection. this updates the selectedCategory state with the new value from user
-  }
+    setSelectedCategory(event.target.value); //helps for drop down selection. this updates the selectedCategory state with the new value from user
+  };
 
-  const categories = [...new Set(products.map((product) => product.category))]
+  const categories = [...new Set(products.map((product) => product.category))];
   {
     /* 
     Sets up a dynamic play by gathering the products.category into an array. then, it converts it into a set to remove
@@ -48,13 +47,13 @@ const HomeScreen = ({ match }) => {
     // trying to create a new array called filteredProducts
 
     const categoryMatch = // create a new variable called categoryMatch
-      selectedCategory === '' || product.category === selectedCategory // set categoryMatch to true if selectedCategory is an empty string or if product.category matches selectedCategory
+      selectedCategory === '' || product.category === selectedCategory; // set categoryMatch to true if selectedCategory is an empty string or if product.category matches selectedCategory
     const lowerMatch = // create a new variable called lowerMatch
-      lowerPrice === '' || parseInt(product.price) >= parseInt(lowerPrice) // set lowerMatch to true if lowerPrice is an empty string or if product.price is greater than or equal to lowerPrice
+      lowerPrice === '' || parseInt(product.price) >= parseInt(lowerPrice); // set lowerMatch to true if lowerPrice is an empty string or if product.price is greater than or equal to lowerPrice
     const upperMatch = // create a new variable called upperMatch
-      upperPrice === '' || parseInt(product.price) <= parseInt(upperPrice) // set upperMatch to true if upperPrice is an empty string or if product.price is less than or equal to upperPrice
-    return categoryMatch && lowerMatch && upperMatch // return true if all three conditions are true (i.e. the current product matches the selected category, lower price, and upper price)
-  })
+      upperPrice === '' || parseInt(product.price) <= parseInt(upperPrice); // set upperMatch to true if upperPrice is an empty string or if product.price is less than or equal to upperPrice
+    return categoryMatch && lowerMatch && upperMatch; // return true if all three conditions are true (i.e. the current product matches the selected category, lower price, and upper price)
+  });
 
   return (
     <>
@@ -62,7 +61,7 @@ const HomeScreen = ({ match }) => {
       {!keyword ? (
         <ProductCarousel />
       ) : (
-        <Link to='/' className='btn btn-light'>
+        <Link to="/" className="btn btn-light">
           Go Back
         </Link>
       )}
@@ -86,7 +85,7 @@ const HomeScreen = ({ match }) => {
                 onChange={handleChange}
                 style={{ marginLeft: '0.5rem' }}
               >
-                <option value=''>All</option>
+                <option value="">All</option>
                 {categories.map((category) => (
                   <option key={category} value={category}>
                     {category}
@@ -104,7 +103,7 @@ const HomeScreen = ({ match }) => {
               <label>
                 From $
                 <input
-                  type='number'
+                  type="number"
                   value={lowerPrice}
                   onChange={(e) => setLowerPrice(e.target.value)}
                   style={{ marginLeft: '0.5rem', width: '6rem' }} //helps stlying and sets stuff to the right
@@ -116,7 +115,7 @@ const HomeScreen = ({ match }) => {
               <label>
                 To $
                 <input
-                  type='number'
+                  type="number"
                   value={upperPrice}
                   onChange={(e) => setUpperPrice(e.target.value)}
                   style={{ marginLeft: '0.5rem', width: '6rem' }}
@@ -138,7 +137,7 @@ const HomeScreen = ({ match }) => {
         <Paginate pages={pages} page={page} keyword={keyword ? keyword : ''} />
       </>
     </>
-  )
-}
+  );
+};
 
-export default HomeScreen
+export default HomeScreen;
