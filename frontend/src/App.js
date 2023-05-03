@@ -38,7 +38,6 @@ const App = () => {
           <Route path="/admin/userlist" component={UserListScreen} />
           <Route path="/admin/user/:id/edit" component={UserEditScreen} />
           <Route path="/later/:id?" component={LaterScreen} />
-          <Route path="/later/:id?" component={LaterScreen} />
           <Route
             path="/admin/productlist"
             component={ProductListScreen}
